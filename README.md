@@ -1,1 +1,3 @@
-# booking_system
+# ASP.NET MVC Tours Booking System / Blog / Administration
+Předmět Technologie pro publikování na Webu II měl za cíl seznámit nás se základy tvorby webových aplikací. 
+Samostatně jsem vytvořil webovou aplikaci v technologii ASP.NET MVC. Byl kladen důraz na praktickou použitelnost prezentovaného řešení pro předpokládaného typického uživatele, vhodnost použití jednotlivých technologií a respektování aktuálních požadavků na přístupnost a zabezpečení aplikace. Aplikace zahrnovala i navrhovaní databázového systému malého až středního rozsahu. A bez ovládaní objektového programovaní by nebylo možné takovou aplikaci vytvořit. 
