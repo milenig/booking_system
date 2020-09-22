@@ -1,0 +1,18 @@
+﻿@model DataAccess.Model.KnihovnaUser
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<ul class="navbar-nav mr-auto smooth-scroll">
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("Index", "Tours")" data-offset="90">Zajezdy</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("Index", "Blog")" data-offset="90">Blog</a>
+    </li>
+</ul>
+<ul class="navbar-nav mr-auto smooth-scroll navbar-right">
+    <li class="nav-item">
+        <a class="nav-link login" href="@Url.Action("Index", "Login",new {area="Admin"})" data-offset="90">Log-in / Sign Up</a>
+    </li>
+</ul>

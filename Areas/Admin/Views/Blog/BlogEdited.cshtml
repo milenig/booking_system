@@ -1,0 +1,54 @@
+﻿@using System.Text.RegularExpressions
+@using System.Web.UI.WebControls
+@using DataAccess.Model
+@using HtmlAgilityPack
+@model IList<Blog>
+
+@{
+    ViewBag.Title = "Blog";
+}
+
+<h2>Write blogs and enjoy ;)</h2>
+
+<main role="main">
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <a href="@Url.Action("CreateBlog", "Blog")" class="btn btn-primary">Write a blog</a>
+
+    <div class="container">
+        <!-- Example row of columns -->
+        @{
+            int pom = 0;
+        }
+        <div class="row">
+            @foreach (Blog blog in Model)
+            {
+                <div class="col-md-4">
+                    <h2>@blog.Header</h2>
+                    <p>@blog.Datum.Date.ToShortDateString() @blog.Location</p>
+                    <p class="short-description">@Regex.Replace(@blog.Description, "<.*?>", string.Empty)</p>
+                    <p class="btn btn-light">@Html.ActionLink("Čti více >", "DetailBlog", "Blog", new { id = blog.Id }, new { title = blog.Header })</p>
+                    <p class="btn btn-light"> @Html.ActionLink("Edit", "EditBlog", "Blog", new { id = blog.Id }, null)</p>
+                    <p class="btn btn-light"> @Html.ActionLink("Delete", "DeleteBlog", "Blog", new { id = blog.Id }, new { onclick = "return confirm('Prejete si opravdu smazat blog');" })</p>
+                    <hr>
+                </div>
+                pom++;
+            }
+
+        </div>
+        @if (pom == 0)
+        {
+            <h4>Nebyl nalezen zadny blog</h4>
+            <p><a class="nav-link" href="@Url.Action("Index", "Blog")" data-offset="90">vsechny blogy</a></p>
+        }
+
+    </div> <!-- /container -->
+    <ul class="pagination">
+        @for (int i = 1; i <= ViewBag.PagesBlog; i++)
+        {
+            <li class="@(ViewBag.CurrentPageBlog == i ? "active":"")">
+                <a href="@Url.Action("Index", "Blog",new{pageBlog=i})">@i</a>
+            </li>
+        }
+    </ul>
+</main>

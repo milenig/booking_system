@@ -1,0 +1,26 @@
+﻿@model DataAccess.Model.Tour
+@{
+    Layout = null;
+}
+
+<div class="col-md-3 text-center">
+    <ul class="list-unstyled mb-0">
+        <li>
+            <p>@Model.Name</p>
+        </li>
+        <li>
+            <i class="fas fa-map-marker-alt fa-2x"></i>
+            <p>@Model.Destination.Name</p>
+        </li>
+
+        <li>
+            <i class="fas fa-calendar-alt fa-2x"></i>
+            <p>@Model.StartDate.ToString("dd MMMM") - @Model.EndDate.ToString("dd MMMM")</p>
+        </li>
+
+        <li>
+            <i class="fas fa-dollar-sign mt-4 fa-2x"></i>
+            <p>@Model.Price Kč</p>
+        </li>
+    </ul>
+</div>

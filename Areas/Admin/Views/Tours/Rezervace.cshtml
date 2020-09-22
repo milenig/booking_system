@@ -1,0 +1,117 @@
+﻿@using DataAccess.Model
+@{
+    ViewBag.Title = "Rezervace";
+}
+
+
+<h2>Rezervace</h2>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-condensed">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">UserId</th>
+                <th scope="col">Nazev</th>
+                <th scope="col">Datum</th>
+                <th scope="col">Cena</th>
+                <th scope="col">Jmeno</th>
+                <th scope="col">Prijmeni</th>
+                <th scope="col">Telefon</th>
+                <th scope="col">Email</th>
+                <th scope="col">Adresa</th>
+                <th scope="col">Cislo objednavky</th>
+                <th scope="col">Zaplaceno</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Reservation r in Model)
+            {
+                if (r.Status == "zaplaceno")
+                {
+            <tr style="background: rgb(200, 255, 186)">
+                <td>@r.Tour.Id</td>
+                <td>@r.KnihovnaUser.Id</td>
+                <td>@r.Tour.Name</td>
+                <td>@r.Tour.StartDate.ToShortDateString() - @r.Tour.EndDate.ToShortDateString()</td>
+                <td>@r.Tour.Price</td>
+                <td>@r.Jmeno</td>
+                <td>@r.Prijmeni</td>
+                <td>@r.Telefon</td>
+                <td>@r.Email</td>
+                <td>@r.Adresa</td>
+                <td>@r.ValidationNumber</td>
+                <td style="text-align: center">
+                    <a href="@Url.Action("ChangeStatus", "Reservation", new {id = r.Id,zrusit=false,vratit=false})" onclick="return confirm('Opravdu si prejete zmenit status rezervace?')">
+                        <i class="fas fa-check"></i>
+                    </a>
+                </td>
+                <td>
+                    <a href="@Url.Action("ChangeStatus", "Reservation", new {id = r.Id,zrusit=true,vratit=false})" onclick="return confirm('Opravdu si prejete zrusit tuto rezervaci?')">
+                        zursit
+                    </a>
+                    <br/>
+                    <a href="@Url.Action("DeleteReservation", "Reservation", new {id = r.Id})" onclick="return confirm('Opravdu si prejete smazat tuto rezervaci z databaze?')">
+                        smazat
+                    </a>
+                </td>
+                
+            </tr>
+                } else if (r.Status == "nezaplaceno")
+                {
+            <tr style="background: rgb(255, 237, 160)">
+                <td>@r.Tour.Id</td>
+                <td>@r.KnihovnaUser.Id</td>
+                <td>@r.Tour.Name</td>
+                <td>@r.Tour.StartDate.ToShortDateString() - @r.Tour.EndDate.ToShortDateString()</td>
+                <td>@r.Tour.Price</td>
+                <td>@r.Jmeno</td>
+                <td>@r.Prijmeni</td>
+                <td>@r.Telefon</td>
+                <td>@r.Email</td>
+                <td>@r.Adresa</td>
+                <td>@r.ValidationNumber</td>
+                <td style="text-align: center">
+                    <a href="@Url.Action("ChangeStatus", "Reservation", new {id = r.Id,zrusit=false,vratit=false})" onclick="return confirm('Opravdu si prejete zmenit status rezervace?')">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </td>
+                <td>
+                    <a href="@Url.Action("ChangeStatus", "Reservation", new {id = r.Id,zrusit=true,vratit=false})" onclick="return confirm('Opravdu si prejete zrusit tuto rezervaci?')">
+                        zursit
+                    </a>
+                    <br />
+                    <a href="@Url.Action("DeleteReservation", "Reservation", new {id = r.Id})" onclick="return confirm('Opravdu si prejete smazat tuto rezervaci z databaze?')">
+                        smazat
+                    </a>
+                </td>
+            </tr>
+                } else if (r.Status == "zruseno")
+                {
+            <tr style="background: rgb(255, 174, 174)">
+                <td>@r.Tour.Id</td>
+                <td>@r.KnihovnaUser.Id</td>
+                <td>@r.Tour.Name</td>
+                <td>@r.Tour.StartDate.ToShortDateString() - @r.Tour.EndDate.ToShortDateString()</td>
+                <td>@r.Tour.Price</td>
+                <td>@r.Jmeno</td>
+                <td>@r.Prijmeni</td>
+                <td>@r.Telefon</td>
+                <td>@r.Email</td>
+                <td>@r.Adresa</td>
+                <td>@r.ValidationNumber</td>
+                <td></td>
+                <td>
+                    <a href="@Url.Action("ChangeStatus", "Reservation", new {id = r.Id,zrusit=true,vratit=true})" onclick="return confirm('Opravdu si prejete vratit tuto rezervaci?')">
+                        vratit
+                    </a>
+                    <br />
+                    <a href="@Url.Action("DeleteReservation", "Reservation", new {id = r.Id})" onclick="return confirm('Opravdu si prejete smazat tuto rezervaci z databaze?')">
+                        smazat
+                    </a>
+                </td>
+            </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,43 @@
+﻿@model DataAccess.Model.KnihovnaUser
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<ul class="navbar-nav mr-auto smooth-scroll">
+    @if (Model.Role.Identificator == "admin")
+    {
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "Tours")" data-offset="90">Sprava zajezdu</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Zamestnanci", "Tours")" data-offset="90">Uživatelé</a>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "Tours")" data-offset="90">Zajezdy</a>
+        </li>
+    }
+
+    @if (Model.Role.Identificator == "blogger" || Model.Role.Identificator == "admin")
+    {
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "Blog")" data-offset="90">Sprava Blogu</a>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "Blog")" data-offset="90">Blog</a>
+        </li>
+    }
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("Rezervace", "Tours")" data-offset="90">Rezervace</a>
+    </li>
+</ul>
+<ul class="navbar-nav mr-auto smooth-scroll navbar-right">
+    <li class="nav-item">
+        <a class="nav-link login" href="@Url.Action("Logout", "Login")" data-offset="90">Log-out</a>
+    </li>
+</ul>

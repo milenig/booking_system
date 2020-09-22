@@ -1,0 +1,65 @@
+﻿@using DataAccess.Model
+@model DataAccess.Model.Tour
+@{
+    ViewBag.Title = Model.Destination.Name + " - " + Model.Name;
+}
+<!-- Page Content -->
+<div style="position: relative;">
+    @if (!string.IsNullOrEmpty(Model.ImageName))
+    {
+        <img style="width: 100vw; height: 250px; object-fit: cover" class="img-fluid img-fluid shadow-lg" src="@Url.Content("~/uploads/book/" + Model.ImageName)" />
+        <h1 class="my-4 tour-img-name">@Model.Name
+            <small><a style="color: rgb(230, 230, 230)" href="@Url.Action("Category", "Tours", new {id = Model.Destination.Id})"><span>@Model.Destination.Name</span></a></small>
+        </h1>
+    }
+</div>
+<div class="container">
+
+    <button type="button" class="btn btn-primary" onclick="goBack()">Back</button>
+    <!-- Portfolio Item Heading -->
+    <!-- Portfolio Item Row -->
+    <div class="row">
+
+        <div class="col-md-4">
+
+            <h3 class="my-3">Detaily zájezdu</h3>
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <td>Cena</td>
+                    </tr>
+                    <tr>
+                        <td class="tabela-row">@Model.Price Kč</td>
+                    </tr>
+                    <tr>
+                        <td>Datum</td>
+                    </tr>
+                    <tr>
+                        <td class="tabela-row">@Model.StartDate.ToString("dd MMMM") - @Model.EndDate.ToString("dd MMMM")</td>
+                    </tr>
+                    <tr>
+                        <td>Obsazenost</td>
+                    </tr>
+                    <tr>
+                        <td class="tabela-row">@Model.CurrentCapacity / @Model.Capacity</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-8">
+            <h3 class="my-3">Program zajezdu</h3>
+            @Html.Raw(Model.Description)
+        </div>
+
+    </div>
+    
+    <!-----------RESERVATION SECTION------------>
+    @{ Html.RenderAction("ReservationSection", "Reservation",new{id=Model.Id}); }
+</div>
+<!-- /.container -->
+
+
+
+
+

@@ -1,0 +1,48 @@
+﻿@using System.Text.RegularExpressions
+@using DataAccess.Model
+@model IList<Blog>
+@{
+    Layout = null;
+}
+
+<div class="well">
+    <h4 class="margin-t-0">Search</h4>
+    @using (Html.BeginForm("Search", "Blog",FormMethod.Post,new{@class="search-container", @name = "myform" }))
+    {
+    <div class="input-group">
+        <label class="sr-only" for="search-form">Search the site</label>
+        <input type="text" id="search-form" class="form-control" placeholder="Vyhledat blogy podle lokace" aria-label="Vyhledat blogy" name="phrase" aria-describedby="btnGroupAddon">
+        <span class="input-group-btn" onClick="javascript:myform.submit()">
+            <button class="btn btn-default" type="button">
+                <span class="glyphicon glyphicon-search"></span>
+                <span class="sr-only">Search</span>
+            </button>
+        </span>
+    </div>
+    }
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <a href="#" class="fab fa-facebook-f"></a>
+        <a href="#" class="fab fa-twitter"></a>
+        <a href="#" class="fab fa-google"></a>
+        <a href="#" class="fab fa-youtube"></a>
+        <a href="#" class="fab fa-instagram"></a>
+        <a href="#" class="fab fa-pinterest"></a>
+    </div>
+</div>
+
+<h3>Nejnovější blogy <i class="fas fa-level-down-alt text-info"></i></h3>
+
+@foreach (Blog blog in Model)
+{
+    <div class="card gedf-card">
+        <div class="card-body">
+            <h4 class="card-title">@blog.Header</h4>
+            <h6 class="card-subtitle mb-2 text-muted">@DateTime.Now.Date.Subtract(@blog.Datum).Days days ago from @blog.Location</h6>
+            <p class="short-description card-text">@Regex.Replace(@blog.Description, "<.*?>", string.Empty)</p>
+            <p class="btn btn-light">@Html.ActionLink("View details >", "DetailBlog", "Blog", new { id = blog.Id }, new { title = blog.Header })</p>
+        </div>
+    </div>
+}

@@ -1,0 +1,56 @@
+﻿@using System.Text.RegularExpressions
+@using System.Web.UI.WebControls
+@using DataAccess.Model
+@model IList<Blog>
+
+@{
+    ViewBag.Title = "Blog";
+}
+
+<main role="main">
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <div class="container" style="text-align: center">
+            <h2 class="display-3">Blog o cestování</h2>
+            <h4 style="line-height: 1.4em">Nechte se inspirovat a přečtěte si články věnované cestování a exotickým destinacím.
+                V blogu naleznete plno cestovatelských tipů, rad a zkušenostmi ověřených informací nejen o proslulých exotických destinacích, ale i zapomenutých koutech světa.
+                Informace od zkušených cestovatelů vám jistě pomohou při vašem rozhodování, kde strávit svou vysněnou exotickou dovolenou.</h4>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Example row of columns -->
+        @{
+            int pom = 0;
+        }
+        <div class="row">
+            @foreach (Blog blog in Model)
+            {
+                <div class="col-md-4">
+                    <h2>@blog.Header</h2>
+                    <p>@blog.Datum.Date.ToShortDateString() @blog.Location</p>
+                    <p class="short-description">@Regex.Replace(@blog.Description, "<.*?>", string.Empty)</p>
+                    <p class="btn btn-light">@Html.ActionLink("Čti více >", "DetailBlog", "Blog", new { id = blog.Id }, new { title = blog.Header })</p>
+
+                    <hr>
+                </div>
+                pom++;
+            }
+        </div>
+        @if (pom == 0)
+        {
+            <h4>Nebyl nalezen zadny blog</h4>
+            <p><a class="nav-link" href="@Url.Action("Index", "Blog")" data-offset="90">vsechny blogy</a></p>
+        }
+
+    </div> <!-- /container -->
+    <ul class="pagination">
+        @for (int i = 1; i <= ViewBag.PagesBlog; i++)
+        {
+            <li class="@(ViewBag.CurrentPageBlog == i ? "active":"")">
+                <a href="@Url.Action("Index", "Blog",new{pageBlog=i})">@i</a>
+            </li>
+        }
+    </ul>
+</main>

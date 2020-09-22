@@ -1,0 +1,31 @@
+﻿@using DataAccess.Model
+@model IList<Tour>
+@{
+    Layout = null;
+}
+
+<h3>Doporučujeme <i class="fas fa-thumbs-up text-info"></i></h3>
+@foreach (Tour tour in Model)
+{
+        <div class="card-body">
+            <ul class="list-group" style="text-align: center">
+                <li class="list-group-item active">
+                    <div class="md-v-line"></div><h4>@tour.Name</h4>
+                </li>
+                <li class="list-group-item">
+                    <div class="md-v-line"></div><i class="fas fa-map-marker-alt fa-lg"></i><p>@tour.Destination.Name</p>
+                </li>
+                <li class="list-group-item">
+                    <div class="md-v-line"></div><i class="fas fa-calendar-alt"></i><p>@tour.StartDate.ToString("dd MMMM") - @tour.EndDate.ToString("dd MMMM")</p>
+                </li>
+                <li class="list-group-item">
+                    <div class="md-v-line"></div><i class="fas fa-dollar-sign mt-4"></i><p>@tour.Price Kč</p>
+                </li>
+                <a href="@Url.Action("Detail", "Tours", new {id = tour.Id})">
+                    <li class="list-group-item">
+                        <div class="md-v-line"></div>More informations
+                    </li>
+                </a>
+            </ul>
+        </div>
+}

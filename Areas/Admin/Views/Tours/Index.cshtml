@@ -1,0 +1,400 @@
+﻿@using DataAccess.Model
+@model IList<Tour>
+
+@{
+    ViewBag.Title = "Tours";
+}
+
+<!-- Section heading -->
+
+<h2 class="h1-responsive font-weight-bold text-center my-5">Recent posts</h2>
+<!-- Section description -->
+<p class="text-center w-responsive mx-auto mb-5">
+    Duis aute irure dolor in reprehenderit in voluptate velit
+    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
+    qui officia deserunt mollit anim id est laborum.
+</p>
+
+<hr class="featurette-divider">
+
+<div class="row search-row">
+    <div class="col-sm-6">
+        @using (Html.BeginForm("Search", "Tours",FormMethod.Post,new{@class="search-container", @name = "myform" }))
+        {
+            <input type="text" id="search-bar" class="form-control" placeholder="Vyhledat zajezd podle nazvu?"  aria-label="Vyhledat zajezd" name="phrase" aria-describedby="btnGroupAddon">
+            <span aria-hidden="true" onClick="javascript:myform.submit()"><i class="fas fa-search search-icon"></i></span>
+        }
+    </div>
+    <div class="col-sm-3">
+        <div class="dropdown">
+            <button class="dropbtn">Destinace</button>
+            <div class="dropdown-content">
+                <a style="color: black" href="@Url.Action("Index", "Tours")"><h5>All</h5></a>
+                <hr id="hr"/>
+                @if (ViewBag.Categories != null)
+                {
+                    foreach (Destination bc in ViewBag.Categories)
+                    {
+                        <a style="color: black" href="@Url.Action("Category", "Tours", new {id = bc.Id})"><h5>@bc.Name</h5></a>
+                    }
+                }
+            </div>
+        </div>
+    </div>    
+    <div class="col-sm-3">
+        <div class="dropdown">
+            <button class="dropbtn">Cena</button>
+            <div class="dropdown-content">
+                <a style="color: black" href="@Url.Action("Index", "Tours")"><h5>All</h5></a>
+                <hr id="hr" />
+                <a href="@Url.Action("SearchPrice", "Tours", new {hi = 25000})">
+                    <span class="mr-5">
+                        <i class="fas fa-dollar-sign fa-lg"></i>
+                        <i class="fas fa-dollar-sign dollar-no fa-lg"></i>
+                        <i class="fas fa-dollar-sign dollar-no fa-lg"></i>
+                    </span>
+                    do 25.000 Kč
+                </a>
+                <a href="@Url.Action("SearchPrice", "Tours", new {hi = 75000})">
+                    <span class="mr-5">
+                        <i class="fas fa-dollar-sign fa-lg"></i>
+                        <i class="fas fa-dollar-sign fa-lg"></i>
+                        <i class="fas fa-dollar-sign dollar-no fa-lg"></i>
+                    </span>
+                    do 75.000 Kč
+                </a>
+                <a href="@Url.Action("Index", "Tours",new {hi = 150000})">
+                    <span class="mr-5">
+                        <i class="fas fa-dollar-sign fa-lg"></i>
+                        <i class="fas fa-dollar-sign fa-lg"></i>
+                        <i class="fas fa-dollar-sign fa-lg"></i>
+                    </span>
+                    do 150.000 Kč
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!---ONLY ADMIN--->
+<hr class="featurette-divider">
+<a href="@Url.Action("Create", "Tours")" class="btn btn-primary">Pridat tour</a>
+<a href="@Url.Action("CreateCategory", "Tours")" class="btn btn-primary">Pridat destinaci</a>
+<hr />
+
+
+@{
+    int counter = 0;
+}
+@foreach (Tour b in Model)
+{
+    <section class="my-5">
+        @if (counter % 2 == 0)
+        {
+            <div class="row">
+                @if (!string.IsNullOrEmpty(b.ImageName))
+                {
+                    <div class="col-lg-5">
+                        <div class="view overlay rounded z-depth-2 mb-lg-0 mb-4">
+
+                            <img class="img-fluid rounded shadow-lg" src="@Url.Content("~/uploads/book/" + b.ImageName)" alt="@b.Name" />
+
+                            <a>
+                                <div class="mask rgba-white-slight"></div>
+                            </a>
+                            <span class="period">@b.StartDate.ToString("dd MMMM") - @b.EndDate.ToString("dd MMMM")</span>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-7">
+                        <h6 class="font-weight-bold mb-3"><i class="fas fa-map-marked-alt fa-lg"></i> <a style="" href="@Url.Action("Category", "Tours", new {id = b.Destination.Id})"> @b.Destination.Name</a></h6>
+                        <h3 class="font-weight-bold mb-3"><strong>@Html.ActionLink(b.Name, "Detail", "Tours", new { id = b.Id}, new { title = b.Name })</strong></h3>
+
+                        <p>
+                            @b.Destination.Description
+                        </p>
+                        <ul class="list-group">
+                            <!------ONLY FOR ADMIN------>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Prioritet:
+                                <span class="badge badge-primary badge-pill" style="font-size: 1.2em;">@b.Priority</span>
+                            </li>
+                            <!------end ONLY FOR ADMIN------>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Kapacita
+                                @if (b.Status == "obsazeno")
+                                {
+                                    <span class="badge badge-pill badge-obsazeno">Obsazeno</span>
+                                }
+                                else if (b.Status == "volno")
+                                {
+                                    <span class="badge badge-pill badge-volno">Volno</span>
+                                }
+                                else if (b.Status == "kona_se")
+                                {
+                                    <span class="badge badge-pill badge-kona">Koná se</span>
+                                }
+                                <span class="badge badge-primary badge-pill"><span class="badge badge-info badge-pill badge-inside" style="font-size: 1.4em;">@b.CurrentCapacity</span> / @b.Capacity</span>
+                            </li>
+
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Delka zajezdu
+                                <span class="badge badge-primary badge-pill" style="font-size: 1.2em;">@b.EndDate.Subtract(@b.StartDate).TotalDays dni</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Celkova cena
+                                <span class="badge badge-primary badge-pill" style="font-size: 1.2em;">@b.Price Kč</span>
+                            </li>
+                        </ul>
+                        <a href="@Url.Action("Detail", "Tours", new {id = b.Id})">
+                            <button type="button" class="btn btn-labeled btn-info btn-xs">
+                                <span class="btn-label"><i class="fab fa-readme"></i></span>
+                                More information
+                            </button>
+                        </a>
+                        <a href="@Url.Action("Edit", "Tours", new {id = b.Id})">
+                            <button type="button" class="btn btn-labeled btn-success btn-xs">
+                                <span class="btn-label"><i class="fas fa-edit"></i></span>
+                                Edit
+                            </button>
+                        </a>
+                        <a href="@Url.Action("Delete", "Tours", new {id = b.Id})" onclick="return confirm('Opravdu si prejete smazat zajezd?')">
+                            <button type="button" class="btn btn-labeled btn-warning btn-xs">
+                                <span class="btn-label"><i class="fas fa-trash-alt"></i></span>
+                                Delete
+                            </button>
+                        </a>
+
+                    </div>
+                }
+                else
+                {
+                    ////////////////////////////////////////////   BEZ SLIKE    /////////////////////////////////////////////////
+                    <div class="col-lg-12">
+                        <h6 class="font-weight-bold mb-3"><i class="fas fa-map-marked-alt fa-lg"></i> <a style="" href="@Url.Action("Category", "Tours", new {id = b.Destination.Id})"> @b.Destination.Name</a></h6>
+                        <h3 class="font-weight-bold mb-3"><strong>@Html.ActionLink(b.Name, "Detail", "Tours", new { id = b.Id, zobrazPopis = true }, new { title = b.Name })</strong></h3>
+
+                        <p>
+                            @b.Destination.Description
+                        </p>
+                        <span class="period bez">@b.StartDate.ToString("dd MMMM") - @b.EndDate.ToString("dd MMMM")</span>
+                        <ul class="list-group">
+                            <!------ONLY FOR ADMIN------>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Prioritet:
+                                <span class="badge badge-primary badge-pill" style="font-size: 1.2em;">@b.Priority</span>
+                            </li>
+                            <!------end ONLY FOR ADMIN------>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Kapacita
+                                @if (b.Status == "obsazeno")
+                                {
+                                    <span class="badge badge-pill badge-obsazeno">Obsazeno</span>
+                                }
+                                else if (b.Status == "volno")
+                                {
+                                    <span class="badge badge-pill badge-volno">Volno</span>
+                                }
+                                else if (b.Status == "kona_se")
+                                {
+                                    <span class="badge badge-pill badge-kona">Koná se</span>
+                                }
+
+                                <span class="badge badge-primary badge-pill"><span class="badge badge-info badge-pill badge-inside" style="font-size: 1.4em;">@b.CurrentCapacity</span> / @b.Capacity</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Delka zajezdu
+                                <span class="badge badge-primary badge-pill" style="font-size: 1.2em;">@b.EndDate.Subtract(@b.StartDate).TotalDays dni</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Celkova cena
+                                <span class="badge badge-primary badge-pill" style="font-size: 1.2em;">@b.Price Kč</span>
+                            </li>
+                        </ul>
+                        <a href="@Url.Action("Detail", "Tours", new {id = b.Id})">
+                            <button type="button" class="btn btn-labeled btn-info btn-xs">
+                                <span class="btn-label"><i class="fab fa-readme"></i></span>
+                                More information
+                            </button>
+                        </a>
+                        <a href="@Url.Action("Edit", "Tours", new {id = b.Id})">
+                            <button type="button" class="btn btn-labeled btn-success btn-xs">
+                                <span class="btn-label"><i class="fas fa-edit"></i></span>
+                                Edit
+                            </button>
+                        </a>
+                        <a href="@Url.Action("Delete", "Tours", new {id = b.Id})" onclick="return confirm('Opravdu si prejete smazat zajezd?')">
+                            <button type="button" class="btn btn-labeled btn-warning btn-xs">
+                                <span class="btn-label"><i class="fas fa-trash-alt"></i></span>
+                                Delete
+                            </button>
+                        </a>
+
+                    </div>
+                }
+            </div>
+
+        }
+        else
+        {
+            //////////////////////////////////////////////       ROTACIJA POZICIJE     //////////////////////////////////////////////////////////
+            <div class="row">
+
+                @if (!string.IsNullOrEmpty(b.ImageName))
+                {
+                <div class="col-lg-7">
+                    <h6 class="font-weight-bold mb-3"><i class="fas fa-map-marked-alt fa-lg"></i> <a style="" href="@Url.Action("Category", "Tours", new {id = b.Destination.Id})"> @b.Destination.Name</a></h6>
+                    <h3 class="font-weight-bold mb-3"><strong>@Html.ActionLink(b.Name, "Detail", "Tours", new { id = b.Id, zobrazPopis = true }, new { title = b.Name })</strong></h3>
+
+                    <p>
+                        @b.Destination.Description
+                    </p>
+                    <ul class="list-group">
+                        <!------ONLY FOR ADMIN------>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Prioritet:
+                            <span class="badge badge-primary badge-pill" style="font-size: 1.2em;">@b.Priority</span>
+                        </li>
+                        <!------end ONLY FOR ADMIN------>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Kapacita
+                            @if (b.Status == "obsazeno")
+                            {
+                                <span class="badge badge-pill badge-obsazeno">Obsazeno</span>
+                            }
+                            else if (b.Status == "volno")
+                            {
+                                <span class="badge badge-pill badge-volno">Volno</span>
+                            }
+                            else if (b.Status == "kona_se")
+                            {
+                                <span class="badge badge-pill badge-kona">Koná se</span>
+                            }
+                            <span class="badge badge-primary badge-pill"><span class="badge badge-info badge-pill badge-inside" style="font-size: 1.4em;">@b.CurrentCapacity</span> / @b.Capacity</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Delka zajezdu
+                            <span class="badge badge-primary badge-pill" style="font-size: 1.2em;">@b.EndDate.Subtract(@b.StartDate).TotalDays dni</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Celkova cena
+                            <span class="badge badge-primary badge-pill" style="font-size: 1.2em;">@b.Price Kč</span>
+                        </li>
+                    </ul>
+                    <a href="@Url.Action("Detail", "Tours", new {id = b.Id})">
+                        <button type="button" class="btn btn-labeled btn-info btn-xs">
+                            <span class="btn-label"><i class="fab fa-readme"></i></span>
+                            More information
+                        </button>
+                    </a>
+                    <a href="@Url.Action("Edit", "Tours", new {id = b.Id})">
+                        <button type="button" class="btn btn-labeled btn-success btn-xs">
+                            <span class="btn-label"><i class="fas fa-edit"></i></span>
+                            Edit
+                        </button>
+                    </a>
+                    <a href="@Url.Action("Delete", "Tours", new {id = b.Id})" onclick="return confirm('Opravdu si prejete smazat zajezd?')">
+                        <button type="button" class="btn btn-labeled btn-warning btn-xs">
+                            <span class="btn-label"><i class="fas fa-trash-alt"></i></span>
+                            Delete
+                        </button>
+                    </a>
+
+                </div>
+                    <div class="col-lg-5">
+
+                        <div class="view overlay rounded z-depth-2 mb-lg-0 mb-4">
+
+                            <img class="img-fluid rounded shadow-lg" src="@Url.Content("~/uploads/book/" + b.ImageName)" alt="@b.Name" />
+
+                            <a>
+                                <div class="mask rgba-white-slight"></div>
+                            </a>
+                            <span class="period">@b.StartDate.ToString("dd MMMM") - @b.EndDate.ToString("dd MMMM")</span>
+                        </div>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="col-lg-12">
+                        <h6 class="font-weight-bold mb-3"><i class="fas fa-map-marked-alt fa-lg"></i> <a style="" href="@Url.Action("Category", "Tours", new {id = b.Destination.Id})"> @b.Destination.Name</a></h6>
+                        <h3 class="font-weight-bold mb-3"><strong>@Html.ActionLink(b.Name, "Detail", "Tours", new { id = b.Id, zobrazPopis = true }, new { title = b.Name })</strong></h3>
+
+                        <p>
+                            @b.Destination.Description
+                        </p>
+                        <span class="period bez">@b.StartDate.ToString("dd MMMM") - @b.EndDate.ToString("dd MMMM")</span>
+                        <ul class="list-group">
+                            <!------ONLY FOR ADMIN------>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Prioritet:
+                                <span class="badge badge-primary badge-pill" style="font-size: 1.2em;">@b.Priority</span>
+                            </li>
+                            <!------end ONLY FOR ADMIN------>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Kapacita
+                                @if (b.Status == "obsazeno")
+                                {
+                                    <span class="badge badge-pill badge-obsazeno">Obsazeno</span>
+                                }
+                                else if (b.Status == "volno")
+                                {
+                                    <span class="badge badge-pill badge-volno">Volno</span>
+                                }
+                                else if (b.Status == "kona_se")
+                                {
+                                    <span class="badge badge-pill badge-kona">Koná se</span>
+                                }
+
+                                <span class="badge badge-primary badge-pill"><span class="badge badge-info badge-pill badge-inside" style="font-size: 1.4em;">@b.CurrentCapacity</span> / @b.Capacity</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Delka zajezdu
+                                <span class="badge badge-primary badge-pill" style="font-size: 1.2em;">@b.EndDate.Subtract(@b.StartDate).TotalDays dni</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Celkova cena
+                                <span class="badge badge-primary badge-pill" style="font-size: 1.2em;">@b.Price Kč</span>
+                            </li>
+                        </ul>
+                        <a href="@Url.Action("Detail", "Tours", new {id = b.Id})">
+                            <button type="button" class="btn btn-labeled btn-info btn-xs">
+                                <span class="btn-label"><i class="fab fa-readme"></i></span>
+                                More information
+                            </button>
+                        </a>
+                        <a href="@Url.Action("Edit", "Tours", new {id = b.Id})">
+                            <button type="button" class="btn btn-labeled btn-success btn-xs">
+                                <span class="btn-label"><i class="fas fa-edit"></i></span>
+                                Edit
+                            </button>
+                        </a>
+                        <a href="@Url.Action("Delete", "Tours", new {id = b.Id})" onclick="return confirm('Opravdu si prejete smazat zajezd?')">
+                            <button type="button" class="btn btn-labeled btn-warning btn-xs">
+                                <span class="btn-label"><i class="fas fa-trash-alt"></i></span>
+                                Delete
+                            </button>
+                        </a>
+
+
+                    </div>
+                }
+            </div>
+        }
+
+        <hr />
+    </section>
+
+    counter++;
+}
+
+<ul class="pagination">
+    @for (int i = 1; i <= ViewBag.Pages; i++)
+    {
+        <li class="@(ViewBag.CurrentPage == i ? "active":"")">
+            <a href="@Url.Action("Index", "Tours",new{page=i})">@i</a>
+        </li>
+    }
+</ul>

@@ -1,0 +1,46 @@
+﻿@using DataAccess.Model
+@{
+    ViewBag.Title = "Zamestnanci";
+}
+
+<h2>Uživatelé</h2>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-condensed">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Jmeno</th>
+            <th scope="col">Prijmeni</th>
+            <th scope="col">Login</th>
+            <th scope="col">Heslo</th>
+            <th scope="col">Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (KnihovnaUser knihovnaUser in Model)
+        {
+            <tr>
+                <td>@knihovnaUser.Id</td>
+                <td>@knihovnaUser.Name</td>
+                <td>@knihovnaUser.Surname</td>
+                <td>@knihovnaUser.Login</td>
+                <td data-title="Password">
+                    <input name="viewPass" type="password" value="@knihovnaUser.Password" readonly />
+                    <span><button type="button" id="" class="btn btn-default" name="dynamic"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></button></span>
+                </td>
+                <td>@knihovnaUser.Role.Identificator (@knihovnaUser.Role.RoleDescription)</td>
+                <td>
+                    <a href="@Url.Action("EditWorker", "Tours", new {id = knihovnaUser.Id})">
+                        edit
+                    </a>
+                    <br />
+                    <a href="@Url.Action("DeleteWorker", "Tours", new {id = knihovnaUser.Id})" onclick="return confirm('Opravdu si prejete smazat zamestnanca?')">
+                        delete
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<a href="@Url.Action("CreateEmployee", "Tours")" class="btn btn-primary">Pridat zamestnanca</a>

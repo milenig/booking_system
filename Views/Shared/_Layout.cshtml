@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Exo:900" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery-3.0.0.js"></script>
+    <script type="text/javascript" src="~/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery-3.0.0.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.js"></script>
+    <link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.css" type="text/css" />
+</head>
+<body>
+<nav class="top-bar navbar-expand-sm navbar-dark fixed-top scrolling-navbar">
+    <div class="container">
+        <ul class="navbar-nav mr-auto smooth-scroll nav-va">
+            <li class="nav-item"><i class="fas fa-phone"></i> +123 456 789 123</li>
+            <li class="nav-item"><i class="fas fa-map-marker-alt"></i> Univerzita Hradec Králové</li>
+            <li class="nav-item"><a href="mailto:igor.milenkovic@uhk.com" target="_top" class="mailto"><i class="fas fa-at"></i> igor.milenkovic@uhk.cz</a></li>
+            <li class="nav-item"><i class="far fa-clock"></i> 08:30 - 16:00</li>
+            <li class="nav-item"><a href="#"><i class="fab fa-instagram dts"></i></a></li>
+            <li class="nav-item"><a href="#"><i class="fab fa-facebook-f dts"></i></a></li>
+            <li class="nav-item"><a href="#"><i class="fab fa-twitter dts"></i></a></li>
+        </ul>
+    </div>
+</nav>
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar my-nav">
+    <div class="container">
+        <div class="navbar-header">
+            @*@Html.ActionLink("TOUR THERAPY", "Index", "Home", null, new { @class = "navbar-brand" })*@
+            <a href="@Url.Action("Index","Home")"><i class="fab fa-laravel logo"></i></a>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                @{Html.RenderAction("Index", "Menuu");}
+        </div>
+    </div>
+</nav>
+<div class="container body-content">
+
+    @if (TempData["message-success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>@TempData["message-success"]</strong>
+        </div>
+    }
+    else if (TempData["message-danger"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>@TempData["message-danger"]</strong>
+        </div>
+    }
+
+
+    @RenderBody()
+</div>
+    @*<div class="container body-content">
+            <footer>
+                <p>NEW FOOTER</p>
+            </footer>
+        </div>*@
+
+    @*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+    <script src="~/Scripts/bootstrap.min.js"></script>
+<script type="text/javascript">
+    var myButton = document.getElementsByName('dynamic');
+    var myInput = document.getElementsByName('viewPass');
+    myButton.forEach(function (element, index) {
+        element.onclick = function () {
+            'use strict';
+
+            if (myInput[index].type == 'password') {
+                myInput[index].setAttribute('type', 'text');
+                element.firstChild.textContent = 'Hide';
+                element.firstChild.className = "";
+
+            } else {
+                myInput[index].setAttribute('type', 'password');
+                element.firstChild.textContent = '';
+                element.firstChild.className = "glyphicon glyphicon-eye-open";
+            }
+        }
+    })
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#datetimepicker6').datetimepicker({
+            format: 'DD-MM-YYYY'
+            //defaultDate: new Date()
+        });
+        $('#datetimepicker7').datetimepicker({
+            useCurrent: false, //Important! See issue #1075
+            format: 'DD-MM-YYYY'
+        });
+        $("#datetimepicker6").on("dp.change", function (e) {
+            $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+        });
+        $("#datetimepicker7").on("dp.change", function (e) {
+            $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+        });
+    });
+</script>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+</body>
+</html>

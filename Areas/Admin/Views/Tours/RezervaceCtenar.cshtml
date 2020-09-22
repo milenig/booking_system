@@ -1,0 +1,70 @@
+﻿@using DataAccess.Dao
+@using DataAccess.Model
+@{
+    ViewBag.Title = "RezervaceCtenar";
+}
+
+
+<h2>Rezervace</h2>
+@{ int pom = 0; }
+<div class="row">
+    @foreach (Reservation r in Model)
+    {
+        KnihovnaUser user = new KnihovnaUserDao().GetByLogin(User.Identity.Name);
+        if (user.Id == r.KnihovnaUser.Id)
+        {
+            <div class="col-md-4 mb-3">
+                <article class="ticket">
+                    <header class="ticket__wrapper">
+                        @if (r.Status == "zaplaceno")
+                        {
+                            <div class="ticket__header" style="border-top: 0.8rem solid #25a429;">
+                                @r.ValidationNumber <h4>@r.Status</h4> <i class="fas fa-barcode"></i>
+                            </div>
+                        }
+                        else if (r.Status == "nezaplaceno")
+                        {
+                            <div class="ticket__header" style="border-top: 0.8rem solid #dcac14;">
+                                @r.ValidationNumber <h4>@r.Status</h4> <i class="fas fa-barcode"></i>
+                            </div>
+                        }
+                        else if (r.Status == "zruseno")
+                        {
+                            <div class="ticket__header" style="border-top: 0.8rem solid #dc143c;">
+                                @r.ValidationNumber <h4>@r.Status</h4> <i class="fas fa-barcode"></i>
+                            </div>
+                        }
+                    </header>
+                    <div class="ticket__divider">
+                        <div class="ticket__notch"></div>
+                        <div class="ticket__notch ticket__notch--right"></div>
+                    </div>
+                    <div class="ticket__body">
+                        <section class="ticket__section">
+                            <h3>Tour Information</h3>
+                            <p>@r.Tour.Name</p>
+                            <p>@r.Tour.StartDate.ToShortDateString() - @r.Tour.EndDate.ToShortDateString()</p>
+                            <p>@r.Tour.Destination.Name</p>
+                        </section>
+                        <section class="ticket__section">
+                            <h3>Osobni udaje</h3>
+                            <p>@r.Jmeno @r.Prijmeni</p>
+                            <p>@r.Adresa</p>
+                            <p>@r.Telefon @r.Email</p>
+                        </section>
+                    </div>
+                    <footer class="ticket__footer">
+                        <span>Total Paid</span>
+                        <span>@r.Tour.Price Kč</span>
+                    </footer>
+                </article>
+            </div>
+            pom++;
+        }
+    }
+</div>
+
+@if (pom == 0)
+{
+    <h4>Nebyla nalezena žádná rezervace</h4>
+}
